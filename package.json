@@ -1,0 +1,26 @@
+{
+  "name": "meo-store",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MEO - Canadian dropshipping storefront for home & desk goods. Self-hosted WordPress + WooCommerce.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "env:start": "wp-env start",
+    "env:stop": "wp-env stop",
+    "env:destroy": "wp-env destroy",
+    "env:clean": "wp-env clean all",
+    "env:logs": "wp-env logs wordpress",
+    "wp": "wp-env run cli wp",
+    "setup": "bash scripts/setup-store.sh",
+    "setup:catalog": "bash scripts/seed-catalog.sh",
+    "setup:tax": "bash scripts/configure-tax.sh",
+    "reset": "wp-env clean all && bash scripts/setup-store.sh",
+    "lint:php": "bash scripts/lint-php.sh"
+  },
+  "devDependencies": {
+    "@wordpress/env": "^10.17.0"
+  }
+}

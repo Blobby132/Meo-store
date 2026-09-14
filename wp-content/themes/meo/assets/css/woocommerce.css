@@ -1,0 +1,434 @@
+/**
+ * MEO — WooCommerce.
+ *
+ * Woo ships its own stylesheet; we dequeue the general/layout sheets in
+ * inc/woocommerce.php and restyle from scratch here, so these rules are
+ * mostly definitions rather than overrides. Selectors kept to Woo's own class
+ * names (.products, .product, .price ...) so Woo markup we do NOT template
+ * still lands inside the design system.
+ */
+
+/* -----------------------------------------------------------------------
+ * Shop loop
+ * --------------------------------------------------------------------- */
+.woocommerce ul.products,
+ul.products {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	gap: var(--meo-space-m);
+}
+
+ul.products li.product {
+	margin: 0;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	background: var(--meo-surface);
+	border: 1px solid var(--meo-rule);
+	border-radius: var(--meo-radius);
+	overflow: hidden;
+	transition: border-color var(--meo-dur) var(--meo-ease),
+	            transform var(--meo-dur) var(--meo-ease),
+	            box-shadow var(--meo-dur) var(--meo-ease);
+}
+ul.products li.product:hover {
+	border-color: var(--meo-accent);
+	transform: translateY(-2px);
+	box-shadow: var(--meo-shadow);
+}
+
+.meo-card__media {
+	position: relative;
+	display: block;
+	aspect-ratio: 4 / 5;
+	background: var(--meo-surface-2);
+	overflow: hidden;
+}
+.meo-card__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 300ms var(--meo-ease);
+}
+ul.products li.product:hover .meo-card__media img { transform: scale(1.03); }
+
+/* Placeholder when a product has no image yet — shows the SKU, on-brand. */
+.meo-card__placeholder {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-content: center;
+	gap: var(--meo-space-2xs);
+	text-align: center;
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	color: var(--meo-ink-muted);
+	letter-spacing: var(--meo-tracking-label);
+	text-transform: uppercase;
+	background-image: repeating-linear-gradient(
+		45deg,
+		transparent 0, transparent 9px,
+		var(--meo-rule) 9px, var(--meo-rule) 10px
+	);
+}
+
+/* "PLACEHOLDER" flag — deliberately loud. Removed with the seed data. */
+.meo-flag {
+	position: absolute;
+	top: var(--meo-space-2xs);
+	left: var(--meo-space-2xs);
+	z-index: 2;
+	font-family: var(--meo-font-mono);
+	font-size: 0.68rem;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	padding: 3px 7px;
+	border-radius: var(--meo-radius);
+	background: var(--meo-ink);
+	color: var(--meo-bg);
+	border: 1px solid var(--meo-ink);
+}
+.meo-flag--placeholder { background: var(--meo-out-stock); border-color: var(--meo-out-stock); color: #fff; }
+.meo-flag--sale { background: var(--meo-accent); border-color: var(--meo-accent); color: #16231C; }
+
+.meo-card__body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--meo-space-3xs);
+	padding: var(--meo-space-s);
+	flex: 1;
+}
+
+/* SKU line — the manifest tell on every card. */
+.meo-card__sku {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	letter-spacing: 0.06em;
+	color: var(--meo-ink-muted);
+	display: flex;
+	justify-content: space-between;
+	gap: var(--meo-space-2xs);
+	align-items: baseline;
+}
+.meo-card__cat { text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.9em; }
+
+.meo-card__title {
+	font-family: var(--meo-font-display);
+	font-variation-settings: "SOFT" 0, "WONK" 0, "opsz" 24;
+	font-size: var(--meo-step-1);
+	font-weight: 600;
+	line-height: 1.2;
+	margin: 0;
+}
+.meo-card__title a { color: var(--meo-ink); text-decoration: none; }
+.meo-card__title a:hover { color: var(--meo-accent-ink); }
+/* Stretch the title link over the whole card so the card is one target. */
+.meo-card__title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+
+.meo-card__foot {
+	margin-top: auto;
+	padding-top: var(--meo-space-2xs);
+	border-top: 1px dotted var(--meo-rule);
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: var(--meo-space-2xs);
+}
+
+/* Prices are always mono + tabular. */
+.price,
+.woocommerce-Price-amount {
+	font-family: var(--meo-font-mono);
+	font-variant-numeric: tabular-nums;
+	color: var(--meo-ink);
+	font-weight: 600;
+}
+.price { font-size: var(--meo-step-0); }
+.price del { color: var(--meo-ink-muted); font-weight: 400; margin-right: var(--meo-space-3xs); opacity: 0.8; }
+.price ins { text-decoration: none; color: var(--meo-accent-ink); }
+
+/* Stock status pill. */
+.meo-stock {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	white-space: nowrap;
+}
+.meo-stock::before {
+	content: "";
+	width: 7px; height: 7px;
+	border-radius: 50%;
+	background: currentColor;
+	flex-shrink: 0;
+}
+.meo-stock--in { color: var(--meo-in-stock); }
+.meo-stock--low { color: var(--meo-low-stock); }
+.meo-stock--out { color: var(--meo-out-stock); }
+.meo-stock--backorder { color: var(--meo-secondary); }
+
+/* Add-to-cart sits below the fold of the card, above the stretched link. */
+.meo-card__cart { position: relative; z-index: 2; margin-top: var(--meo-space-2xs); }
+ul.products li.product .button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 38px;
+	padding: var(--meo-space-3xs) var(--meo-space-s);
+	background: transparent;
+	color: var(--meo-ink);
+	border: 1px solid var(--meo-rule-strong);
+	border-radius: var(--meo-radius);
+	font-family: var(--meo-font-body);
+	font-size: var(--meo-step--1);
+	text-decoration: none;
+	cursor: pointer;
+	transition: background var(--meo-dur) var(--meo-ease), border-color var(--meo-dur) var(--meo-ease);
+}
+ul.products li.product .button:hover {
+	background: var(--meo-accent-soft);
+	border-color: var(--meo-accent);
+	color: var(--meo-accent-ink);
+}
+ul.products li.product .button.loading { opacity: 0.6; }
+ul.products li.product .added_to_cart { display: none; }
+
+/* -----------------------------------------------------------------------
+ * Shop header / result count / ordering
+ * --------------------------------------------------------------------- */
+.meo-shop-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	gap: var(--meo-space-s);
+	flex-wrap: wrap;
+	margin-bottom: var(--meo-space-m);
+	padding-bottom: var(--meo-space-2xs);
+}
+.woocommerce-result-count {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	color: var(--meo-ink-muted);
+	margin: 0;
+	font-variant-numeric: tabular-nums;
+}
+.woocommerce-ordering select,
+.meo-select {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	padding: var(--meo-space-3xs) var(--meo-space-2xs);
+	background: var(--meo-surface);
+	color: var(--meo-ink);
+	border: 1px solid var(--meo-rule-strong);
+	border-radius: var(--meo-radius);
+	min-height: 36px;
+}
+
+.woocommerce-breadcrumb {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	color: var(--meo-ink-muted);
+	margin-bottom: var(--meo-space-m);
+	letter-spacing: 0.04em;
+}
+.woocommerce-breadcrumb a { color: var(--meo-ink-muted); }
+.woocommerce-breadcrumb a:hover { color: var(--meo-accent-ink); }
+
+/* -----------------------------------------------------------------------
+ * Single product
+ * --------------------------------------------------------------------- */
+.single-product div.product {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: var(--meo-space-xl);
+	align-items: start;
+}
+.single-product div.product .woocommerce-product-gallery { position: relative; }
+.single-product div.product .summary { margin: 0; }
+.single-product div.product .product_title { margin-bottom: var(--meo-space-2xs); }
+
+.single-product .price { font-size: var(--meo-step-2); display: block; margin-bottom: var(--meo-space-s); }
+
+.single-product .woocommerce-product-details__short-description { color: var(--meo-ink-muted); }
+
+.single-product form.cart {
+	display: flex;
+	gap: var(--meo-space-2xs);
+	flex-wrap: wrap;
+	align-items: stretch;
+	margin-block: var(--meo-space-m);
+}
+.single-product form.cart .quantity input {
+	width: 5rem;
+	min-height: 44px;
+	padding: var(--meo-space-2xs);
+	text-align: center;
+	font-family: var(--meo-font-mono);
+	font-variant-numeric: tabular-nums;
+	background: var(--meo-surface);
+	color: var(--meo-ink);
+	border: 1px solid var(--meo-rule-strong);
+	border-radius: var(--meo-radius);
+}
+.single-product form.cart .single_add_to_cart_button {
+	flex: 1;
+	min-width: 12rem;
+	min-height: 44px;
+	background: var(--meo-ink);
+	color: var(--meo-bg);
+	border: 1px solid var(--meo-ink);
+	border-radius: var(--meo-radius);
+	font-family: var(--meo-font-body);
+	font-size: var(--meo-step-0);
+	cursor: pointer;
+	transition: background var(--meo-dur) var(--meo-ease), border-color var(--meo-dur) var(--meo-ease);
+}
+.single-product form.cart .single_add_to_cart_button:hover {
+	background: var(--meo-accent-ink);
+	border-color: var(--meo-accent-ink);
+}
+
+/* Product meta rendered as a manifest block. */
+.product_meta {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	color: var(--meo-ink-muted);
+	border-top: 1px dashed var(--meo-tear-color);
+	padding-top: var(--meo-space-s);
+	margin-top: var(--meo-space-s);
+	display: grid;
+	gap: var(--meo-space-3xs);
+}
+.product_meta > span { display: block; }
+.product_meta .sku { color: var(--meo-ink); letter-spacing: 0.06em; }
+
+/* Tabs */
+.woocommerce-tabs { margin-top: var(--meo-space-xl); grid-column: 1 / -1; }
+.woocommerce-tabs ul.tabs {
+	list-style: none;
+	display: flex;
+	gap: var(--meo-space-s);
+	margin: 0 0 var(--meo-space-m);
+	padding: 0 0 var(--meo-space-2xs);
+	border-bottom: 1px solid var(--meo-rule);
+	flex-wrap: wrap;
+}
+.woocommerce-tabs ul.tabs a {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	text-transform: uppercase;
+	letter-spacing: var(--meo-tracking-label);
+	color: var(--meo-ink-muted);
+	text-decoration: none;
+	padding-bottom: var(--meo-space-3xs);
+	border-bottom: 2px solid transparent;
+	display: block;
+}
+.woocommerce-tabs ul.tabs li.active a { color: var(--meo-ink); border-bottom-color: var(--meo-accent); }
+
+/* -----------------------------------------------------------------------
+ * Cart, checkout, notices
+ * --------------------------------------------------------------------- */
+.woocommerce table.shop_table {
+	width: 100%;
+	border-collapse: collapse;
+	background: var(--meo-surface);
+	border: 1px solid var(--meo-rule);
+	border-radius: var(--meo-radius);
+	font-size: var(--meo-step-0);
+}
+.woocommerce table.shop_table th,
+.woocommerce table.shop_table td {
+	padding: var(--meo-space-xs);
+	border-bottom: 1px dotted var(--meo-rule);
+	text-align: left;
+	vertical-align: middle;
+}
+.woocommerce table.shop_table th {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	text-transform: uppercase;
+	letter-spacing: var(--meo-tracking-label);
+	color: var(--meo-ink-muted);
+	font-weight: 600;
+	background: var(--meo-surface-2);
+}
+.woocommerce table.shop_table td.product-price,
+.woocommerce table.shop_table td.product-subtotal,
+.woocommerce table.shop_table .amount { font-family: var(--meo-font-mono); font-variant-numeric: tabular-nums; }
+
+/* Tables must never force the page to scroll sideways on a phone. */
+.woocommerce-cart-form,
+.woocommerce .cart-collaterals,
+.woocommerce-checkout-review-order { overflow-x: auto; }
+
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error {
+	list-style: none;
+	background: var(--meo-surface);
+	border: 1px solid var(--meo-rule-strong);
+	border-left: 3px solid var(--meo-accent);
+	border-radius: var(--meo-radius);
+	padding: var(--meo-space-xs) var(--meo-space-s);
+	margin: 0 0 var(--meo-space-m);
+	font-size: var(--meo-step-0);
+}
+.woocommerce-error { border-left-color: var(--meo-out-stock); }
+.woocommerce-message { border-left-color: var(--meo-in-stock); }
+
+/* Form fields */
+.woocommerce form .form-row { display: grid; gap: var(--meo-space-3xs); margin-bottom: var(--meo-space-s); }
+.woocommerce form .form-row label { font-family: var(--meo-font-mono); font-size: var(--meo-step--1); text-transform: uppercase; letter-spacing: 0.08em; color: var(--meo-ink-muted); }
+.woocommerce form .form-row input.input-text,
+.woocommerce form .form-row textarea,
+.woocommerce form .form-row select {
+	width: 100%;
+	min-height: 44px;
+	padding: var(--meo-space-2xs);
+	background: var(--meo-surface);
+	color: var(--meo-ink);
+	border: 1px solid var(--meo-rule-strong);
+	border-radius: var(--meo-radius);
+	font-family: var(--meo-font-body);
+	font-size: var(--meo-step-0);
+}
+
+/* Tax line: Canadian GST/HST shows here once configured. See docs/canadian-tax.md */
+.woocommerce .cart_totals .tax-rate th,
+.woocommerce-checkout-review-order .tax-rate th { font-size: var(--meo-step--1); }
+
+.woocommerce-pagination ul {
+	list-style: none;
+	display: flex;
+	gap: var(--meo-space-3xs);
+	padding: 0;
+	margin: var(--meo-space-xl) 0 0;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+.woocommerce-pagination a,
+.woocommerce-pagination span {
+	display: grid;
+	place-content: center;
+	min-width: 40px; min-height: 40px;
+	padding: 0 var(--meo-space-2xs);
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	border: 1px solid var(--meo-rule);
+	border-radius: var(--meo-radius);
+	text-decoration: none;
+	color: var(--meo-ink);
+}
+.woocommerce-pagination .current { background: var(--meo-ink); color: var(--meo-bg); border-color: var(--meo-ink); }
+
+@media (max-width: 860px) {
+	.single-product div.product { grid-template-columns: minmax(0, 1fr); gap: var(--meo-space-l); }
+}

@@ -1,0 +1,20 @@
+/*
+Theme Name: MEO
+Theme URI: https://github.com/Blobby132/Meo-store
+Author: MEO
+Description: Custom classic theme for MEO — a Canadian dropshipping store for home & desk goods. Ships a shipping-manifest design language (tear lines, packing-slip footer, mono SKUs) across a fully restyled WooCommerce storefront. Light and dark themes are driven from CSS custom properties in assets/css/tokens.css.
+Version: 0.1.0
+Requires at least: 6.4
+Tested up to: 6.7
+Requires PHP: 8.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: meo
+Tags: e-commerce, custom-colors, custom-menu, translation-ready, block-styles, wide-blocks
+
+This file exists for the theme header above — WordPress requires it.
+Actual styles live in assets/css/ and are enqueued as separate handles in
+inc/enqueue.php so the cascade order is explicit:
+
+    tokens -> base -> layout -> components -> woocommerce
+*/

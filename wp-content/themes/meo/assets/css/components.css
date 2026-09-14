@@ -1,0 +1,480 @@
+/**
+ * MEO — Components: buttons, hero + manifest box, trust strip, category grid,
+ * about/story, and the packing-slip footer.
+ */
+
+/* -----------------------------------------------------------------------
+ * Buttons
+ * --------------------------------------------------------------------- */
+.meo-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--meo-space-2xs);
+	padding: var(--meo-space-2xs) var(--meo-space-m);
+	min-height: 44px; /* comfortable tap target */
+	border: 1px solid var(--meo-ink);
+	border-radius: var(--meo-radius);
+	background: var(--meo-ink);
+	color: var(--meo-bg);
+	font-family: var(--meo-font-body);
+	font-size: var(--meo-step-0);
+	font-weight: 500;
+	letter-spacing: 0.01em;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background var(--meo-dur) var(--meo-ease),
+	            color var(--meo-dur) var(--meo-ease),
+	            border-color var(--meo-dur) var(--meo-ease);
+}
+.meo-btn:hover {
+	background: var(--meo-accent-ink);
+	border-color: var(--meo-accent-ink);
+	color: var(--meo-bg);
+}
+
+.meo-btn--ghost {
+	background: transparent;
+	color: var(--meo-ink);
+	border-color: var(--meo-rule-strong);
+}
+.meo-btn--ghost:hover {
+	background: var(--meo-accent-soft);
+	border-color: var(--meo-accent);
+	color: var(--meo-accent-ink);
+}
+
+.meo-btn--small { min-height: 36px; padding: var(--meo-space-3xs) var(--meo-space-s); font-size: var(--meo-step--1); }
+.meo-btn--block { width: 100%; }
+
+/* -----------------------------------------------------------------------
+ * Hero — headline left, shipping manifest card right.
+ * --------------------------------------------------------------------- */
+.meo-hero {
+	padding-block: var(--meo-space-2xl) var(--meo-space-xl);
+	position: relative;
+	overflow: hidden;
+}
+
+.meo-hero__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+	gap: var(--meo-space-xl);
+	align-items: center;
+}
+
+.meo-hero__kicker {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	text-transform: uppercase;
+	letter-spacing: var(--meo-tracking-label);
+	color: var(--meo-accent-ink);
+	margin-bottom: var(--meo-space-s);
+	display: flex;
+	align-items: center;
+	gap: var(--meo-space-2xs);
+}
+.meo-hero__kicker::after {
+	content: "";
+	flex: 1;
+	height: 1px;
+	background: var(--meo-accent);
+	opacity: 0.5;
+	max-width: 120px;
+}
+
+.meo-hero h1 { margin-bottom: var(--meo-space-m); }
+.meo-hero__lede {
+	font-size: var(--meo-step-1);
+	color: var(--meo-ink-muted);
+	max-width: 46ch;
+	margin-bottom: var(--meo-space-l);
+}
+
+.meo-hero__actions { display: flex; flex-wrap: wrap; gap: var(--meo-space-xs); }
+
+/**
+ * The manifest box — a mock shipping document. This is the single strongest
+ * carrier of the brand motif, so it earns real document chrome: a header bar
+ * with a document number, tear line, definition rows, and a barcode-ish rule.
+ */
+.meo-manifest {
+	background: var(--meo-surface);
+	border: 1px solid var(--meo-rule-strong);
+	border-radius: var(--meo-radius);
+	box-shadow: var(--meo-shadow);
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	/* A hair of rotation so it reads as a slip resting on the page. */
+	transform: rotate(-0.5deg);
+}
+
+.meo-manifest__bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--meo-space-2xs);
+	background: var(--meo-ink);
+	color: var(--meo-bg);
+	padding: var(--meo-space-2xs) var(--meo-space-s);
+	text-transform: uppercase;
+	letter-spacing: var(--meo-tracking-label);
+	font-size: 0.92em;
+}
+.meo-manifest__bar span:last-child { color: var(--meo-accent); }
+
+.meo-manifest__body { padding: var(--meo-space-s); }
+
+.meo-manifest__row {
+	display: grid;
+	grid-template-columns: 8.5rem minmax(0, 1fr);
+	gap: var(--meo-space-2xs);
+	padding-block: var(--meo-space-2xs);
+	align-items: baseline;
+}
+.meo-manifest__row + .meo-manifest__row { border-top: 1px dotted var(--meo-rule); }
+
+.meo-manifest__key {
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--meo-ink-muted);
+	font-size: 0.92em;
+}
+.meo-manifest__val { color: var(--meo-ink); font-variant-numeric: tabular-nums; }
+.meo-manifest__val strong { color: var(--meo-accent-ink); font-weight: 600; }
+
+/* Decorative barcode strip: irregular bars via a layered gradient. */
+.meo-manifest__barcode {
+	height: 34px;
+	margin-top: var(--meo-space-s);
+	background-image: repeating-linear-gradient(
+		to right,
+		var(--meo-ink) 0, var(--meo-ink) 2px,
+		transparent 2px, transparent 4px,
+		var(--meo-ink) 4px, var(--meo-ink) 5px,
+		transparent 5px, transparent 9px,
+		var(--meo-ink) 9px, var(--meo-ink) 12px,
+		transparent 12px, transparent 14px
+	);
+	opacity: 0.75;
+}
+.meo-manifest__barcode-caption {
+	text-align: center;
+	letter-spacing: 0.3em;
+	color: var(--meo-ink-muted);
+	margin-top: var(--meo-space-3xs);
+	font-size: 0.85em;
+}
+
+/* -----------------------------------------------------------------------
+ * Trust strip
+ * --------------------------------------------------------------------- */
+.meo-trust {
+	background: var(--meo-surface-2);
+	border-block: 1px solid var(--meo-rule);
+}
+.meo-trust__grid {
+	display: flex;
+	align-items: stretch;
+	gap: var(--meo-space-m);
+	padding-block: var(--meo-space-m);
+}
+.meo-trust__item {
+	flex: 1;
+	display: flex;
+	gap: var(--meo-space-xs);
+	align-items: flex-start;
+	min-width: 0;
+}
+.meo-trust__icon {
+	flex-shrink: 0;
+	width: 22px; height: 22px;
+	stroke: var(--meo-accent-ink);
+	fill: none;
+	stroke-width: 1.5;
+	margin-top: 2px;
+}
+.meo-trust__item h3 {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	text-transform: uppercase;
+	letter-spacing: var(--meo-tracking-label);
+	margin: 0 0 var(--meo-space-3xs);
+	color: var(--meo-ink);
+	font-weight: 600;
+}
+.meo-trust__item p {
+	margin: 0;
+	font-size: var(--meo-step--1);
+	color: var(--meo-ink-muted);
+	line-height: 1.5;
+}
+
+/* -----------------------------------------------------------------------
+ * Category grid — four numbered cards, like manifest line items.
+ * --------------------------------------------------------------------- */
+.meo-cats {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+	gap: var(--meo-space-s);
+}
+
+.meo-cat {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: var(--meo-space-2xs);
+	padding: var(--meo-space-m);
+	background: var(--meo-surface);
+	border: 1px solid var(--meo-rule);
+	border-radius: var(--meo-radius);
+	text-decoration: none;
+	color: var(--meo-ink);
+	min-height: 168px;
+	overflow: hidden;
+	transition: border-color var(--meo-dur) var(--meo-ease),
+	            transform var(--meo-dur) var(--meo-ease),
+	            box-shadow var(--meo-dur) var(--meo-ease);
+}
+.meo-cat:hover {
+	border-color: var(--meo-accent);
+	transform: translateY(-2px);
+	box-shadow: var(--meo-shadow);
+	color: var(--meo-ink);
+}
+
+.meo-cat__index {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	letter-spacing: var(--meo-tracking-label);
+	color: var(--meo-accent-ink);
+}
+.meo-cat__name {
+	font-family: var(--meo-font-display);
+	font-variation-settings: "SOFT" 0, "WONK" 0, "opsz" 28;
+	font-size: var(--meo-step-2);
+	font-weight: 600;
+	line-height: 1.15;
+	margin: 0;
+}
+.meo-cat__desc { font-size: var(--meo-step--1); color: var(--meo-ink-muted); margin: 0; }
+.meo-cat__count {
+	margin-top: auto;
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	color: var(--meo-ink-muted);
+	font-variant-numeric: tabular-nums;
+	display: flex;
+	align-items: center;
+	gap: var(--meo-space-2xs);
+}
+.meo-cat__count::before {
+	content: "";
+	width: 18px; height: 1px;
+	background: var(--meo-accent);
+}
+
+/* -----------------------------------------------------------------------
+ * About / story
+ * --------------------------------------------------------------------- */
+.meo-about__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: var(--meo-space-xl);
+	align-items: start;
+}
+.meo-about__body p:last-child { margin-bottom: 0; }
+.meo-about__body p { color: var(--meo-ink-muted); }
+.meo-about__body p:first-of-type {
+	color: var(--meo-ink);
+	font-size: var(--meo-step-1);
+}
+
+/* Spec table — the story section's facts, rendered as a slip. */
+.meo-spec {
+	background: var(--meo-surface);
+	border: 1px solid var(--meo-rule-strong);
+	border-radius: var(--meo-radius);
+	padding: var(--meo-space-m);
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+}
+.meo-spec__row {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: var(--meo-space-s);
+	padding-block: var(--meo-space-2xs);
+	align-items: baseline;
+}
+.meo-spec__row + .meo-spec__row { border-top: 1px dotted var(--meo-rule); }
+.meo-spec__key { text-transform: uppercase; letter-spacing: 0.08em; color: var(--meo-ink-muted); }
+.meo-spec__val { text-align: right; font-variant-numeric: tabular-nums; color: var(--meo-ink); }
+
+/* -----------------------------------------------------------------------
+ * Footer — packing slip
+ * --------------------------------------------------------------------- */
+.meo-footer {
+	background: var(--meo-surface);
+	border-top: 2px solid var(--meo-ink);
+	margin-top: var(--meo-space-2xl);
+}
+
+.meo-footer__slipbar {
+	background: var(--meo-ink);
+	color: var(--meo-bg);
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	text-transform: uppercase;
+	letter-spacing: var(--meo-tracking-label);
+	padding-block: var(--meo-space-2xs);
+}
+.meo-footer__slipbar .meo-wrap { display: flex; justify-content: space-between; gap: var(--meo-space-s); flex-wrap: wrap; }
+.meo-footer__slipbar span:last-child { color: var(--meo-accent); }
+
+.meo-footer__cols {
+	display: grid;
+	grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+	gap: var(--meo-space-l);
+	padding-block: var(--meo-space-xl);
+}
+
+.meo-footer__about p {
+	font-size: var(--meo-step--1);
+	color: var(--meo-ink-muted);
+	max-width: 34ch;
+}
+
+.meo-footer__col h3 {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	text-transform: uppercase;
+	letter-spacing: var(--meo-tracking-label);
+	color: var(--meo-ink-muted);
+	margin-bottom: var(--meo-space-xs);
+	font-weight: 600;
+	padding-bottom: var(--meo-space-3xs);
+	border-bottom: 1px solid var(--meo-rule);
+}
+.meo-footer__col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--meo-space-2xs); }
+.meo-footer__col a {
+	color: var(--meo-ink);
+	text-decoration: none;
+	font-size: var(--meo-step--1);
+}
+.meo-footer__col a:hover { color: var(--meo-accent-ink); text-decoration: underline; }
+
+/* The totals block — a real packing slip's summary rows. */
+.meo-footer__totals {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+}
+.meo-footer__totals .meo-spec__row { padding-block: var(--meo-space-3xs); }
+
+.meo-footer__bottom {
+	border-top: 1px dashed var(--meo-tear-color);
+	padding-block: var(--meo-space-m);
+	display: flex;
+	justify-content: space-between;
+	gap: var(--meo-space-s);
+	flex-wrap: wrap;
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	color: var(--meo-ink-muted);
+}
+.meo-footer__bottom a { color: var(--meo-ink-muted); }
+
+/* -----------------------------------------------------------------------
+ * Responsive
+ * --------------------------------------------------------------------- */
+@media (max-width: 980px) {
+	.meo-hero__grid,
+	.meo-about__grid { grid-template-columns: minmax(0, 1fr); gap: var(--meo-space-l); }
+	.meo-manifest { transform: none; }
+	.meo-footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.meo-trust__grid { flex-wrap: wrap; }
+	.meo-trust__item { flex: 1 1 45%; }
+	.meo-trust .meo-tear-v { display: none; }
+}
+
+@media (max-width: 560px) {
+	.meo-hero { padding-block: var(--meo-space-xl) var(--meo-space-l); }
+	.meo-footer__cols { grid-template-columns: minmax(0, 1fr); gap: var(--meo-space-m); }
+	.meo-trust__item { flex: 1 1 100%; }
+	.meo-manifest__row { grid-template-columns: minmax(0, 1fr); gap: 0; }
+	.meo-hero__actions .meo-btn { flex: 1 1 100%; }
+}
+
+/* -----------------------------------------------------------------------
+ * Small pieces: theme toggle, search, editorial content, product notes.
+ * --------------------------------------------------------------------- */
+
+/* Toggle shows the icon for the theme you'd switch TO, not the current one. */
+.meo-theme-toggle__sun { display: none; }
+.meo-theme-toggle__moon { display: inline-flex; }
+:root[data-theme="dark"] .meo-theme-toggle__sun { display: inline-flex; }
+:root[data-theme="dark"] .meo-theme-toggle__moon { display: none; }
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .meo-theme-toggle__sun { display: inline-flex; }
+	:root:not([data-theme="light"]) .meo-theme-toggle__moon { display: none; }
+}
+.meo-theme-toggle span { display: inline-flex; }
+
+.meo-search__row { display: flex; gap: var(--meo-space-2xs); flex-wrap: wrap; }
+.meo-search__input {
+	flex: 1 1 14rem;
+	min-height: 44px;
+	padding: var(--meo-space-2xs);
+	background: var(--meo-surface);
+	color: var(--meo-ink);
+	border: 1px solid var(--meo-rule-strong);
+	border-radius: var(--meo-radius);
+	font-family: var(--meo-font-body);
+	font-size: var(--meo-step-0);
+}
+
+/* Editorial content (pages, posts, front-page editor block). */
+.meo-entry h2 { margin-top: var(--meo-space-l); }
+.meo-entry h3 { margin-top: var(--meo-space-m); }
+.meo-entry ul, .meo-entry ol { max-width: var(--meo-measure); padding-left: 1.2em; }
+.meo-entry li { margin-bottom: var(--meo-space-3xs); }
+.meo-entry blockquote {
+	margin: var(--meo-space-m) 0;
+	padding: var(--meo-space-s) var(--meo-space-m);
+	border-left: 2px solid var(--meo-accent);
+	background: var(--meo-surface);
+	color: var(--meo-ink-muted);
+}
+.meo-entry code, .meo-entry kbd {
+	font-family: var(--meo-font-mono);
+	font-size: 0.9em;
+	background: var(--meo-surface-2);
+	padding: 0.1em 0.35em;
+	border-radius: var(--meo-radius);
+}
+.meo-entry pre { overflow-x: auto; background: var(--meo-surface); padding: var(--meo-space-s); border: 1px solid var(--meo-rule); border-radius: var(--meo-radius); }
+.meo-entry table { width: 100%; border-collapse: collapse; }
+.meo-entry figure { margin: var(--meo-space-m) 0; }
+
+/* Single-product extras. */
+.meo-single-stock { margin: 0 0 var(--meo-space-s); }
+
+.meo-placeholder-note {
+	background: var(--meo-accent-soft);
+	border: 1px dashed var(--meo-accent);
+	border-radius: var(--meo-radius);
+	padding: var(--meo-space-2xs) var(--meo-space-xs);
+	font-size: var(--meo-step--1);
+	color: var(--meo-accent-ink);
+	margin-bottom: var(--meo-space-s);
+	max-width: none;
+}
+
+.meo-catalogue-more { margin: var(--meo-space-l) 0 0; text-align: center; max-width: none; }
+
+.meo-page-links { display: flex; gap: var(--meo-space-2xs); margin-top: var(--meo-space-m); }
+
+/* Sidebar widgets. */
+.meo-widget { margin-bottom: var(--meo-space-m); }
+.meo-widget ul { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--meo-space-3xs); }
+.meo-widget a { color: var(--meo-ink); text-decoration: none; font-size: var(--meo-step--1); }
+.meo-widget a:hover { color: var(--meo-accent-ink); }

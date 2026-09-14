@@ -1,0 +1,146 @@
+/**
+ * MEO — Base: reset, typography, and the shared "manifest" primitives
+ * (tear lines, mono labels) that the rest of the theme composes with.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+	margin: 0;
+	background: var(--meo-bg);
+	color: var(--meo-ink);
+	font-family: var(--meo-font-body);
+	font-size: var(--meo-step-0);
+	line-height: 1.6;
+	font-feature-settings: "kern" 1;
+	-webkit-font-smoothing: antialiased;
+}
+
+img, svg, video { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3, h4 {
+	font-family: var(--meo-font-display);
+	/* Fraunces is variable: SOFT 0 / WONK 0 keeps it crisp rather than quirky,
+	   optical size tracks the rendered size. */
+	font-variation-settings: "SOFT" 0, "WONK" 0, "opsz" 32;
+	font-weight: 600;
+	line-height: 1.12;
+	letter-spacing: -0.015em;
+	margin: 0 0 var(--meo-space-s);
+	text-wrap: balance;
+}
+
+h1 { font-size: var(--meo-step-5); }
+h2 { font-size: var(--meo-step-4); }
+h3 { font-size: var(--meo-step-2); }
+h4 { font-size: var(--meo-step-1); }
+
+p { margin: 0 0 var(--meo-space-s); max-width: var(--meo-measure); text-wrap: pretty; }
+
+a { color: var(--meo-secondary); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { color: var(--meo-accent-ink); }
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+	outline: 2px solid var(--meo-accent-ink);
+	outline-offset: 2px;
+	border-radius: var(--meo-radius);
+}
+
+/* -----------------------------------------------------------------------
+ * Manifest primitives — the motif vocabulary used across every section.
+ * --------------------------------------------------------------------- */
+
+/**
+ * .meo-mono — the packing-slip voice. Prices, SKUs, order and tracking
+ * numbers, and any uppercase field label. `font-variant-numeric: tabular-nums`
+ * matters here: it keeps price columns and SKU digits vertically aligned.
+ */
+.meo-mono {
+	font-family: var(--meo-font-mono);
+	font-variant-numeric: tabular-nums;
+	font-size: 0.86em;
+	letter-spacing: 0.01em;
+}
+
+/* Uppercase field label above a value, as on a shipping form. */
+.meo-label {
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	text-transform: uppercase;
+	letter-spacing: var(--meo-tracking-label);
+	color: var(--meo-ink-muted);
+	margin: 0 0 var(--meo-space-3xs);
+	display: block;
+}
+
+/**
+ * .meo-tear — the dashed divider. Built from a repeating-linear-gradient
+ * rather than `border-top: dashed` so the dash/gap ratio is controllable
+ * from tokens; browsers give you no control over native dashed borders.
+ */
+.meo-tear {
+	height: 2px;
+	border: 0;
+	margin: var(--meo-space-xl) 0;
+	background-image: repeating-linear-gradient(
+		to right,
+		var(--meo-tear-color) 0,
+		var(--meo-tear-color) var(--meo-tear-dash),
+		transparent var(--meo-tear-dash),
+		transparent calc(var(--meo-tear-dash) + var(--meo-tear-gap))
+	);
+	background-size: 100% 2px;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.meo-tear--tight { margin: var(--meo-space-m) 0; }
+.meo-tear--flush { margin: 0; }
+
+/* Vertical variant — separates the trust-strip items on wide screens. */
+.meo-tear-v {
+	width: 2px;
+	align-self: stretch;
+	background-image: repeating-linear-gradient(
+		to bottom,
+		var(--meo-tear-color) 0,
+		var(--meo-tear-color) var(--meo-tear-dash),
+		transparent var(--meo-tear-dash),
+		transparent calc(var(--meo-tear-dash) + var(--meo-tear-gap))
+	);
+}
+
+/* Screen-reader-only, matching WordPress's own .screen-reader-text contract. */
+.screen-reader-text,
+.meo-sr {
+	position: absolute !important;
+	width: 1px; height: 1px;
+	padding: 0; margin: -1px;
+	overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+	white-space: nowrap; border: 0;
+}
+
+.skip-link {
+	position: absolute;
+	top: -100%;
+	left: var(--meo-space-s);
+	z-index: 200;
+	padding: var(--meo-space-2xs) var(--meo-space-s);
+	background: var(--meo-surface);
+	color: var(--meo-ink);
+	border: 1px solid var(--meo-rule-strong);
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+}
+.skip-link:focus { top: var(--meo-space-s); }
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

@@ -1,0 +1,169 @@
+/**
+ * MEO — Layout: page shell, header/nav, footer frame.
+ */
+
+.meo-wrap {
+	width: min(100% - (2 * var(--meo-space-s)), var(--meo-content));
+	margin-inline: auto;
+}
+.meo-wrap--wide { width: min(100% - (2 * var(--meo-space-s)), var(--meo-content-wide)); }
+.meo-wrap--narrow { width: min(100% - (2 * var(--meo-space-s)), 760px); }
+
+.meo-section { padding-block: var(--meo-space-xl); }
+.meo-section--tight { padding-block: var(--meo-space-l); }
+
+/* Section heading with a mono kicker above it, like a form section number. */
+.meo-section-head { margin-bottom: var(--meo-space-l); }
+.meo-section-head h2 { margin-bottom: var(--meo-space-2xs); }
+.meo-section-head p { color: var(--meo-ink-muted); margin-bottom: 0; }
+
+/* -----------------------------------------------------------------------
+ * Header
+ * --------------------------------------------------------------------- */
+
+.meo-header {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	background: color-mix(in srgb, var(--meo-bg) 92%, transparent);
+	backdrop-filter: blur(8px);
+	border-bottom: 1px solid var(--meo-rule);
+}
+
+/* Thin gold announcement rail above the nav. */
+.meo-announce {
+	background: var(--meo-ink);
+	color: var(--meo-bg);
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	letter-spacing: 0.04em;
+	text-align: center;
+	padding: var(--meo-space-3xs) var(--meo-space-s);
+}
+.meo-announce strong { color: var(--meo-accent); font-weight: 600; }
+
+.meo-header__inner {
+	display: flex;
+	align-items: center;
+	gap: var(--meo-space-m);
+	min-height: 66px;
+	padding-block: var(--meo-space-2xs);
+}
+
+.meo-brand {
+	font-family: var(--meo-font-display);
+	font-variation-settings: "SOFT" 0, "WONK" 0, "opsz" 40;
+	font-size: var(--meo-step-2);
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	color: var(--meo-ink);
+	text-decoration: none;
+	line-height: 1;
+	flex-shrink: 0;
+}
+.meo-brand:hover { color: var(--meo-ink); }
+.meo-brand__mark { color: var(--meo-accent); }
+.meo-brand__tag {
+	display: block;
+	font-family: var(--meo-font-mono);
+	font-size: 0.5em;
+	letter-spacing: var(--meo-tracking-label);
+	text-transform: uppercase;
+	color: var(--meo-ink-muted);
+	margin-top: 3px;
+	font-weight: 400;
+}
+
+.meo-nav { margin-left: auto; }
+.meo-nav ul {
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--meo-space-m);
+	margin: 0;
+	padding: 0;
+}
+.meo-nav a {
+	color: var(--meo-ink);
+	text-decoration: none;
+	font-size: var(--meo-step--1);
+	letter-spacing: 0.02em;
+	padding-block: var(--meo-space-3xs);
+	border-bottom: 2px solid transparent;
+	transition: border-color var(--meo-dur) var(--meo-ease), color var(--meo-dur) var(--meo-ease);
+	display: block;
+}
+.meo-nav a:hover,
+.meo-nav .current-menu-item > a,
+.meo-nav .current_page_item > a {
+	color: var(--meo-accent-ink);
+	border-bottom-color: var(--meo-accent);
+}
+
+.meo-header__actions {
+	display: flex;
+	align-items: center;
+	gap: var(--meo-space-2xs);
+	flex-shrink: 0;
+}
+
+/* Icon button shared by the theme toggle, cart and mobile menu trigger. */
+.meo-iconbtn {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--meo-space-3xs);
+	background: transparent;
+	border: 1px solid var(--meo-rule);
+	border-radius: var(--meo-radius);
+	color: var(--meo-ink);
+	cursor: pointer;
+	padding: var(--meo-space-3xs) var(--meo-space-2xs);
+	font-family: var(--meo-font-mono);
+	font-size: var(--meo-step--1);
+	line-height: 1;
+	min-height: 34px;
+	transition: border-color var(--meo-dur) var(--meo-ease), background var(--meo-dur) var(--meo-ease);
+	text-decoration: none;
+}
+.meo-iconbtn:hover { border-color: var(--meo-accent); background: var(--meo-accent-soft); color: var(--meo-ink); }
+.meo-iconbtn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+
+.meo-cart-count {
+	font-variant-numeric: tabular-nums;
+	background: var(--meo-accent);
+	color: #16231C; /* fixed dark ink: sits on gold in BOTH themes, so it must not flip */
+	border-radius: var(--meo-radius-pill);
+	padding: 1px 6px;
+	font-size: 0.85em;
+	font-weight: 600;
+}
+
+.meo-menu-toggle { display: none; }
+
+/* -----------------------------------------------------------------------
+ * Mobile
+ * --------------------------------------------------------------------- */
+@media (max-width: 860px) {
+	.meo-menu-toggle { display: inline-flex; }
+
+	.meo-nav {
+		display: none;
+		position: absolute;
+		inset-inline: 0;
+		top: 100%;
+		background: var(--meo-surface);
+		border-bottom: 1px solid var(--meo-rule);
+		border-top: 1px solid var(--meo-rule);
+		padding: var(--meo-space-s);
+		box-shadow: var(--meo-shadow);
+	}
+	.meo-nav.is-open { display: block; }
+	.meo-nav ul { flex-direction: column; gap: 0; }
+	.meo-nav li { border-bottom: 1px solid var(--meo-rule); }
+	.meo-nav li:last-child { border-bottom: 0; }
+	.meo-nav a { padding-block: var(--meo-space-xs); border-bottom: 0; }
+	.meo-nav a:hover { border-bottom: 0; }
+
+	.meo-header__inner { position: relative; }
+	.meo-header__actions { margin-left: auto; }
+}

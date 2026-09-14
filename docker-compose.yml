@@ -1,0 +1,83 @@
+# Fallback dev environment for MEO.
+#
+# wp-env (`npm run env:start`) is the supported path — see README. This file is
+# the escape hatch for when you want an explicit stack: a different PHP or
+# MariaDB version, a config closer to your production host, or wp-env is
+# misbehaving.
+#
+#   docker compose up -d
+#   docker compose run --rm wpcli wp core install \
+#     --url=http://localhost:8888 --title=MEO \
+#     --admin_user=admin --admin_password=password --admin_email=dev@example.com
+#   MEO_WP="docker compose run --rm wpcli wp" MEO_SCRIPTS_PATH=/var/www/html/wp-content/meo-scripts \
+#     bash scripts/setup-store.sh
+#
+# The setup scripts work against either environment — that is what MEO_WP is for.
+
+services:
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_ROOT_PASSWORD: rootpassword
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  wordpress:
+    image: wordpress:php8.3-apache
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8888:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_DEBUG_LOG', true );
+        define( 'WP_DEBUG_DISPLAY', false );
+        define( 'WP_ENVIRONMENT_TYPE', 'local' );
+    volumes:
+      - wp_data:/var/www/html
+      # Only our own code is bind-mounted; core and plugins live in the volume.
+      - ./wp-content/themes/meo:/var/www/html/wp-content/themes/meo
+      - ./wp-content/mu-plugins/meo-dropship-bridge.php:/var/www/html/wp-content/mu-plugins/meo-dropship-bridge.php
+      - ./wp-content/mu-plugins/meo-dropship-bridge:/var/www/html/wp-content/mu-plugins/meo-dropship-bridge
+      - ./scripts:/var/www/html/wp-content/meo-scripts
+
+  wpcli:
+    image: wordpress:cli-php8.3
+    # The CLI image runs as uid 33 (www-data) so it can write to the shared volume.
+    user: "33:33"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - wp_data:/var/www/html
+      - ./wp-content/themes/meo:/var/www/html/wp-content/themes/meo
+      - ./wp-content/mu-plugins/meo-dropship-bridge.php:/var/www/html/wp-content/mu-plugins/meo-dropship-bridge.php
+      - ./wp-content/mu-plugins/meo-dropship-bridge:/var/www/html/wp-content/mu-plugins/meo-dropship-bridge
+      - ./scripts:/var/www/html/wp-content/meo-scripts
+    # Keeps the service from exiting; run commands with `docker compose run --rm wpcli wp ...`
+    entrypoint: ["tail", "-f", "/dev/null"]
+
+volumes:
+  db_data:
+  wp_data:

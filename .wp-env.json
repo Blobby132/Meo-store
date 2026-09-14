@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/wp-env.json",
+  "core": null,
+  "plugins": [
+    "https://downloads.wordpress.org/plugin/woocommerce.zip"
+  ],
+  "themes": [
+    "./wp-content/themes/meo"
+  ],
+  "mappings": {
+    "wp-content/mu-plugins/meo-dropship-bridge.php": "./wp-content/mu-plugins/meo-dropship-bridge.php",
+    "wp-content/mu-plugins/meo-dropship-bridge": "./wp-content/mu-plugins/meo-dropship-bridge",
+    "wp-content/uploads/meo-seed": "./data/seed-images",
+    "wp-content/meo-scripts": "./scripts"
+  },
+  "config": {
+    "WP_DEBUG": true,
+    "WP_DEBUG_LOG": true,
+    "WP_DEBUG_DISPLAY": false,
+    "SCRIPT_DEBUG": true,
+    "WP_ENVIRONMENT_TYPE": "local",
+    "WOOCOMMERCE_STORE_COUNTRY": "CA",
+    "DISABLE_WP_CRON": false
+  },
+  "env": {
+    "tests": {
+      "config": {
+        "WP_DEBUG": true,
+        "WP_DEBUG_DISPLAY": true
+      }
+    }
+  }
+}
