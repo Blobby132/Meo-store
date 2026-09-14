@@ -114,8 +114,8 @@
 	justify-content: space-between;
 	align-items: center;
 	gap: var(--meo-space-2xs);
-	background: var(--meo-ink);
-	color: var(--meo-bg);
+	background: var(--meo-bar-bg);
+	color: var(--meo-bar-ink);
 	padding: var(--meo-space-2xs) var(--meo-space-s);
 	text-transform: uppercase;
 	letter-spacing: var(--meo-tracking-label);
@@ -320,8 +320,8 @@
 }
 
 .meo-footer__slipbar {
-	background: var(--meo-ink);
-	color: var(--meo-bg);
+	background: var(--meo-bar-bg);
+	color: var(--meo-bar-ink);
 	font-family: var(--meo-font-mono);
 	font-size: var(--meo-step--1);
 	text-transform: uppercase;

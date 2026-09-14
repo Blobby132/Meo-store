@@ -33,6 +33,17 @@
 	--meo-accent-ink:    #7A5714;
 	--meo-accent-soft:   rgba(180, 132, 42, 0.12); /* tinted fills */
 
+	/**
+	 * Document bars — the announcement rail, the manifest card header and the
+	 * footer slip bar. These need their OWN tokens rather than reusing
+	 * ink-on-bg, because ink and bg swap in dark mode: a bar painted with
+	 * `background: var(--meo-ink)` flips to a full-bleed cream band and
+	 * becomes the brightest thing on a dark page. The motif wants a dark
+	 * printed bar in BOTH themes, so it gets a pair that does not invert.
+	 */
+	--meo-bar-bg:        #16231C;
+	--meo-bar-ink:       #EEE8DC;
+
 	/* ---- Status ------------------------------------------------------ */
 	--meo-in-stock:      #3F6B45;
 	--meo-low-stock:     #8A5A17;
@@ -107,6 +118,9 @@
 		--meo-accent-soft: rgba(227, 180, 90, 0.14);
 		--meo-secondary:   #93A9C6;
 
+		--meo-bar-bg:      #232A1E; /* raised dark, not cream — no glare band */
+		--meo-bar-ink:     #E9E3D6;
+
 		--meo-in-stock:    #7FB587;
 		--meo-low-stock:   #D9A441;
 		--meo-out-stock:   #D98A80;
@@ -134,6 +148,9 @@
 	--meo-accent-ink:  #E3B45A;
 	--meo-accent-soft: rgba(227, 180, 90, 0.14);
 	--meo-secondary:   #93A9C6;
+
+	--meo-bar-bg:      #232A1E; /* raised dark, not cream — no glare band */
+	--meo-bar-ink:     #E9E3D6;
 
 	--meo-in-stock:    #7FB587;
 	--meo-low-stock:   #D9A441;

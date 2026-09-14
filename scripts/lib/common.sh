@@ -12,9 +12,13 @@
 
 set -euo pipefail
 
-# Path of ./scripts as seen from INSIDE the container (see .wp-env.json mappings).
-# Override when running somewhere the repo is mounted elsewhere.
-MEO_SCRIPTS_PATH="${MEO_SCRIPTS_PATH:-wp-content/meo-scripts}"
+# Path of ./scripts relative to the WordPress root, as seen from inside the
+# container (see the mappings in .wp-env.json / docker-compose.yml).
+#
+# This stays RELATIVE and is resolved against the live ABSPATH at call time —
+# see wp_php(). Hardcoding an absolute path here would break the moment the
+# scripts run somewhere WordPress is not at /var/www/html.
+MEO_SCRIPTS_REL="${MEO_SCRIPTS_REL:-wp-content/meo-scripts}"
 
 # Colours, but only when attached to a terminal.
 if [ -t 1 ]; then
@@ -39,14 +43,42 @@ wp() {
 	fi
 }
 
-# Run a PHP file through WP-CLI, resolving it to the in-container path.
+# Absolute path to the WordPress root, as WordPress itself reports it.
+#
+# Cached after the first lookup — it costs a full WP bootstrap to ask.
+MEO_ABSPATH=""
+wp_abspath() {
+	if [ -z "$MEO_ABSPATH" ]; then
+		# rtrim the trailing slash ABSPATH always carries.
+		MEO_ABSPATH="$(wp eval 'echo rtrim( ABSPATH, "/\\" );' 2>/dev/null | tr -d '\r')"
+	fi
+	printf '%s' "$MEO_ABSPATH"
+}
+
+# Run a PHP file through WP-CLI.
 #
 # Passing structured data as CLI arguments gets mangled by the layers between
 # here and the container, so anything with quotes, ampersands or newlines goes
 # through a file instead.
+#
+# The path is built from the live ABSPATH rather than passed relative, because
+# `wp eval-file` resolves relative paths against the CALLING PROCESS's working
+# directory, not the WordPress root. That happens to work when the CLI runs
+# with its cwd at the WordPress root (wp-env does) and silently fails to find
+# the file anywhere else — including any host where you run these over SSH.
 wp_php() {
 	local script="$1"; shift
-	wp eval-file "${MEO_SCRIPTS_PATH}/php/${script}" "$@"
+	local root
+	root="$(wp_abspath)"
+
+	if [ -z "$root" ]; then
+		fail "Could not determine the WordPress root (ABSPATH). Is the environment running?"
+	fi
+
+	# MEO_SCRIPTS_PATH, if set, overrides the whole resolved path.
+	local base="${MEO_SCRIPTS_PATH:-${root}/${MEO_SCRIPTS_REL}}"
+
+	wp eval-file "${base}/php/${script}" "$@"
 }
 
 # Abort early with a useful message if WordPress is not reachable.

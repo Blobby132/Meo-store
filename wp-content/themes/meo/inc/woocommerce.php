@@ -142,17 +142,60 @@ function meo_single_placeholder_notice() {
 add_action( 'woocommerce_single_product_summary', 'meo_single_placeholder_notice', 4 );
 
 /**
- * Replace Woo's default stock text with ours (the pill covers it).
+ * Replace Woo's default stock text with ours.
+ *
+ * meo_single_stock_badge() renders the status pill on the single product page,
+ * so Woo's own availability paragraph would be a duplicate.
+ *
+ * Signature is two arguments because that is what the filter passes —
+ * `apply_filters( 'woocommerce_get_stock_html', $availability_html, $product )`.
+ * Declaring a third and registering with accepted_args of 3 is an
+ * ArgumentCountError on PHP 8, and it takes down every product page.
  *
  * @param string     $html    Default markup.
- * @param string     $text    Availability text.
  * @param WC_Product $product Product.
  * @return string
  */
-function meo_availability_html( $html, $text, $product ) {
+function meo_availability_html( $html, $product ) {
 	return '';
 }
-add_filter( 'woocommerce_get_stock_html', 'meo_availability_html', 10, 3 );
+add_filter( 'woocommerce_get_stock_html', 'meo_availability_html', 10, 2 );
+
+/**
+ * Replace Woo's placeholder image on the single product page.
+ *
+ * Woo ships a light-grey placeholder PNG. On the dark theme it renders as a
+ * large bright block — the brightest thing on the page — and it reads as a
+ * broken image rather than a deliberate gap. This swaps in the same hatched
+ * "no image" panel the loop cards use, so an imageless product looks
+ * intentional in both themes.
+ *
+ * Only fires when the product genuinely has no image; real gallery images are
+ * passed through untouched.
+ *
+ * @param string $html    Gallery image markup.
+ * @param int    $post_id Product post ID.
+ * @return string
+ */
+function meo_single_image_placeholder( $html, $post_id = 0 ) {
+	$product = wc_get_product( $post_id ? $post_id : get_the_ID() );
+
+	if ( $product instanceof WC_Product && $product->get_image_id() ) {
+		return $html;
+	}
+
+	return sprintf(
+		'<div class="woocommerce-product-gallery__image--placeholder meo-card__media">
+			<span class="meo-card__placeholder">
+				<span>%1$s</span>
+				<span>%2$s</span>
+			</span>
+		</div>',
+		esc_html__( 'No image', 'meo' ),
+		esc_html( $product instanceof WC_Product ? meo_product_sku( $product ) : '' )
+	);
+}
+add_filter( 'woocommerce_single_product_image_thumbnail_html', 'meo_single_image_placeholder', 10, 2 );
 
 /**
  * Cart item count for the header badge.

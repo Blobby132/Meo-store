@@ -11,14 +11,43 @@
 /* -----------------------------------------------------------------------
  * Shop loop
  * --------------------------------------------------------------------- */
+/**
+ * Column count is driven by the `columns-N` class WooCommerce puts on the list,
+ * which comes from `loop_shop_columns` (3, set in inc/woocommerce.php) or from
+ * a shortcode's own `columns` attribute.
+ *
+ * An `auto-fill` track list would ignore both and pick its own number from the
+ * available width — which quietly makes the PHP setting a lie. Reading the
+ * class keeps one source of truth.
+ */
 .woocommerce ul.products,
 ul.products {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: var(--meo-space-m);
+}
+
+ul.products.columns-1 { grid-template-columns: minmax(0, 1fr); }
+ul.products.columns-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ul.products.columns-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ul.products.columns-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+ul.products.columns-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+ul.products.columns-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+
+/* Below the desktop breakpoint the declared count is overridden by what fits. */
+@media (max-width: 900px) {
+	.woocommerce ul.products,
+	ul.products,
+	ul.products[class*="columns-"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+	.woocommerce ul.products,
+	ul.products,
+	ul.products[class*="columns-"] { grid-template-columns: minmax(0, 1fr); }
 }
 
 ul.products li.product {
@@ -431,4 +460,11 @@ ul.products li.product .added_to_cart { display: none; }
 
 @media (max-width: 860px) {
 	.single-product div.product { grid-template-columns: minmax(0, 1fr); gap: var(--meo-space-l); }
+}
+
+/* Imageless single product — matches the loop card's hatched panel. */
+.woocommerce-product-gallery__image--placeholder.meo-card__media {
+	aspect-ratio: 1 / 1;
+	border: 1px solid var(--meo-rule);
+	border-radius: var(--meo-radius);
 }

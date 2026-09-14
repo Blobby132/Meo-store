@@ -32,8 +32,8 @@
 
 /* Thin gold announcement rail above the nav. */
 .meo-announce {
-	background: var(--meo-ink);
-	color: var(--meo-bg);
+	background: var(--meo-bar-bg);
+	color: var(--meo-bar-ink);
 	font-family: var(--meo-font-mono);
 	font-size: var(--meo-step--1);
 	letter-spacing: 0.04em;
