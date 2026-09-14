@@ -41,6 +41,8 @@ tokens → base → layout → components → woocommerce
 | `--meo-accent` | `#B4842A` | Gold — rules, borders, large display |
 | `--meo-accent-ink` | `#7A5714` | Gold **text** at normal size |
 | `--meo-secondary` | `#4E617A` | Slate blue — links |
+| `--meo-bar-bg` | `#16231C` | Document bars (see below) |
+| `--meo-bar-ink` | `#EEE8DC` | Text on document bars |
 
 ### The two golds
 
@@ -54,6 +56,27 @@ So there are two:
 
 In dark mode the brightened gold clears 9.5:1 on its own, so both tokens
 collapse to the same value there.
+
+### The document bars
+
+The announcement rail, the manifest card header and the footer slip bar all
+read as a dark printed bar. They get their **own** token pair rather than
+reusing `--meo-ink` on `--meo-bg`.
+
+That is not redundancy. Ink and background swap in dark mode, so a bar painted
+`background: var(--meo-ink)` inverts into a full-bleed cream band — the
+brightest thing on an otherwise dark page, and a glare source directly above
+the content. `--meo-bar-bg` / `--meo-bar-ink` stay dark-on-light in both
+themes, so the motif reads the same way either way.
+
+| | Light | Dark | Contrast (dark) |
+| --- | --- | --- | --- |
+| `--meo-bar-bg` | `#16231C` | `#232A1E` | — |
+| `--meo-bar-ink` | `#EEE8DC` | `#E9E3D6` | 11.6:1 |
+| `--meo-accent` on the bar | `#B4842A` | `#E3B45A` | 7.7:1 |
+
+Buttons and the pagination "current" chip deliberately do **not** use these —
+a primary button inverting with the theme is correct and expected.
 
 ### Measured contrast (light)
 
@@ -155,6 +178,12 @@ Single fluid column at every breakpoint, with a minimum 16px side gutter from
 | ≤ 980px | Hero and about stack; manifest un-rotates; footer to 2 columns; trust strip wraps |
 | ≤ 860px | Mobile nav (hamburger, Escape and outside-click close); single product stacks |
 | ≤ 560px | Footer to 1 column; hero buttons full width; manifest rows stack |
+
+The product grid's column count at desktop comes from the `columns-N` class
+WooCommerce puts on `ul.products`, which is driven by `loop_shop_columns` (3)
+or a shortcode's `columns` attribute — so PHP stays the single source of truth.
+An `auto-fill` track list would override both and pick its own number from the
+viewport. Below 900px the declared count gives way to what actually fits.
 
 Tables and the cart get their own `overflow-x: auto` containers, so the page
 body never scrolls sideways.
