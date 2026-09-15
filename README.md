@@ -54,7 +54,10 @@ wp-content/themes/meo/        the theme — classic PHP templates + theme.json
 └── woocommerce/              template overrides (product card, content wrappers)
 
 wp-content/mu-plugins/
-└── meo-dropship-bridge/      supplier integration surface — stubs and TODOs
+└── meo-dropship-bridge/      supplier integration surface
+    ├── interface-supplier-adapter.php   the adapter contract
+    ├── adapters/                        one class per supplier (mock only, so far)
+    └── fixtures/                        sample feed the mock reads
 
 scripts/                      WP-CLI setup, mounted into the container
 ├── setup-store.sh            orchestrator
@@ -62,7 +65,9 @@ scripts/                      WP-CLI setup, mounted into the container
 
 docs/
 ├── canadian-tax.md           GST/HST, the $30k threshold, what is NOT set up
-├── dropshipping-integration.md   choosing and wiring a connector
+├── connector-decision.md     why Canadian-direct, and what was rejected
+├── supplier-adapter.md       how to write a real supplier adapter
+├── dropshipping-integration.md   how the bridge works (partly superseded)
 └── design-tokens.md          the design system
 ```
 
@@ -81,6 +86,7 @@ docs/
 | `npm run setup:tax` | Install/refresh GST/HST rates only |
 | `npm run reset` | Wipe and rebuild from scratch |
 | `npm run wp -- <args>` | Any WP-CLI command, e.g. `npm run wp -- plugin list` |
+| `npm run test:bridge` | End-to-end test of the dropship bridge (mock adapter) |
 | `npm run lint:php` | Syntax-check every PHP file |
 
 ---
@@ -127,25 +133,35 @@ PST, QST and RST are **separate regimes and are not set up**. Saskatchewan in
 particular has no small-supplier threshold. Read
 [`docs/canadian-tax.md`](docs/canadian-tax.md) before selling.
 
-### 3. No supplier is connected
+### 3. No real supplier is connected
 
 `wp-content/mu-plugins/meo-dropship-bridge/` holds the full integration surface
-— order push, tracking pull, stock sync, product import — stubbed behind hooks
-and marked `TODO`. The bridge is inert until a connector opts in via
-`meo_dropship_connector_active`, so it is safe as shipped.
+— order push, tracking pull, stock sync, product import. It is **implemented and
+tested**, but only against a fixture-backed `mock` adapter that sends nothing
+anywhere.
 
-Connector choice is deferred. The one thing that matters for MEO: **transit
-time**. The storefront promises 6–14 business days and duties disclosed at
-checkout. AliExpress-based connectors typically run 15–30 days, which breaks
-that copy. See
-[`docs/dropshipping-integration.md`](docs/dropshipping-integration.md) for the
-comparison and the exact list of files whose copy must be re-checked.
+The bridge is **inert as shipped**: no adapter is enabled, so
+`meo_dropship_connector_active()` is `false` and every entry point returns early.
+
+```bash
+npm run test:bridge          # 27 checks, end to end, cleans up after itself
+npm run wp -- meo-dropship status
+```
+
+Supplier choice is settled — direct from Canadian suppliers (Grosche, GFurn),
+because the September 2026 Canada–US surtax applies below the de minimis
+thresholds and would otherwise break the site's duty-disclosure promise. See
+[`docs/connector-decision.md`](docs/connector-decision.md) for the reasoning and
+[`docs/supplier-adapter.md`](docs/supplier-adapter.md) for what a real adapter
+has to fill in.
 
 ---
 
 ## Before launch
 
-- [ ] Choose a supplier connector and implement the four `TODO` stubs
+- [x] Choose a supplier connector (see `docs/connector-decision.md`)
+- [x] Build the supplier-adapter scaffolding, proven against a mock feed
+- [ ] Write the real Grosche/GFurn adapter (see `docs/supplier-adapter.md`)
 - [ ] Verify shipping/duties copy against the supplier's real numbers
 - [ ] Purge the placeholder products
 - [ ] Register for GST/HST if over the threshold, then enable tax collection

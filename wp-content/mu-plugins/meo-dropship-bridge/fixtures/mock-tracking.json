@@ -1,0 +1,21 @@
+{
+  "_comment": "Canned shipments for fetch_tracking_updates(). Supplier order references are generated at push time, so a fixture cannot know them in advance — the mock adapter therefore hands these out in order to whatever refs it is asked about, one per ref, cycling if it runs out. A real adapter would instead look each ref up against the supplier's API or shipment feed.",
+  "_shape": "Each entry supplies the carrier and tracking number the adapter reports back for one order reference.",
+  "shipments": [
+    {
+      "carrier": "Canada Post",
+      "tracking": "7023 1490 0001 8846",
+      "service": "Expedited Parcel"
+    },
+    {
+      "carrier": "Purolator",
+      "tracking": "PUR330491882615",
+      "service": "Ground"
+    },
+    {
+      "carrier": "Canada Post",
+      "tracking": "7023 1490 0002 3317",
+      "service": "Expedited Parcel"
+    }
+  ]
+}

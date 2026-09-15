@@ -1,0 +1,9 @@
+{
+  "_comment": "Canned response for fetch_stock_updates(). Deliberately DIFFERENT from the stock column in mock-products.csv so that running the daily sync visibly changes quantities — that is how you prove the sync path actually wrote something rather than just ran. GR-HEI-0155 drops to 0 to exercise the out-of-stock transition, and GR-MAD-0340 drops to 2 to exercise the low-stock badge (threshold is 6, see meo_stock_badge()).",
+  "_shape": "supplier_product_id => units on hand. A real adapter builds this map from the supplier's stock feed or API.",
+  "stock": {
+    "GR-MIL-0620": 24,
+    "GR-MAD-0340": 2,
+    "GR-HEI-0155": 0
+  }
+}

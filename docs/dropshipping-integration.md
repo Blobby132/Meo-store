@@ -30,6 +30,11 @@ editing a template.
 
 ## Choosing a connector
 
+> **Decided.** See [`docs/connector-decision.md`](connector-decision.md) — MEO
+> sources direct from Canadian suppliers (Grosche, GFurn). The table below was
+> the pre-research hypothesis and three of its four rows turned out to be wrong;
+> the memo lists the corrections. Kept for the reasoning, not the conclusions.
+
 The decision that matters for MEO is **transit time to Canada**, because the
 storefront makes specific promises.
 
@@ -62,7 +67,22 @@ implement landed-cost calculation or change the copy.
 
 ## What to implement
 
-Four functions in `bootstrap.php` are stubbed and marked `TODO`.
+> **Superseded as of v0.2.0.** These four functions are no longer stubs — they
+> are implemented in `bootstrap.php` and proven end to end against a fixture-
+> backed mock adapter. What remains is writing one adapter class per real
+> supplier. **See [`docs/supplier-adapter.md`](supplier-adapter.md)**, which is
+> the current handoff doc.
+>
+> The sections below still describe the intended behaviour correctly, and are
+> kept because they explain *why* each piece works the way it does. Where they
+> say "implement this", read "this is implemented; here is the reasoning".
+>
+> One behaviour changed: `_meo_supplier_order_ref` now holds an array of
+> `supplier slug => reference` rather than a single string, because an order can
+> span two suppliers. Orders are completed only once every supplier on them has
+> reported a shipment.
+
+The four operations, as implemented:
 
 ### 1. Push order → supplier
 
